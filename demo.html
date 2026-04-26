@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OA Trial Bank (Demo)</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'DM Sans', system-ui, sans-serif;
+            background: #f1f5ff;
+            color: #1f2937;
+        }
+
+        header {
+            background: #0f2d8a;
+            color: white;
+            padding: 12px 12px;
+            display: flex;
+            align-items: center;
+            gap: 34px;
+        }
+
+        .hero {
+            width: 100%;
+            background:
+                url("data:image/svg+xml,%3Csvg width='400' height='400' viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='80' cy='80' r='5' fill='none' stroke='rgba(255,255,255,0.25)' stroke-width='1.5'/%3E%3Ccircle cx='180' cy='60' r='3' fill='none' stroke='rgba(255,255,255,0.2)' stroke-width='1.5'/%3E%3Ccircle cx='260' cy='130' r='6' fill='none' stroke='rgba(255,255,255,0.25)' stroke-width='1.5'/%3E%3Ccircle cx='140' cy='200' r='4' fill='none' stroke='rgba(255,255,255,0.2)' stroke-width='1.5'/%3E%3Ccircle cx='320' cy='240' r='3' fill='none' stroke='rgba(255,255,255,0.2)' stroke-width='1.5'/%3E%3Ccircle cx='60' cy='300' r='5' fill='none' stroke='rgba(255,255,255,0.25)' stroke-width='1.5'/%3E%3Ccircle cx='200' cy='340' r='4' fill='none' stroke='rgba(255,255,255,0.2)' stroke-width='1.5'/%3E%3Cline x1='80' y1='80' x2='180' y2='60' stroke='rgba(255,255,255,0.15)' stroke-width='1'/%3E%3Cline x1='180' y1='60' x2='260' y2='130' stroke='rgba(255,255,255,0.15)' stroke-width='1'/%3E%3Cline x1='260' y1='130' x2='140' y2='200' stroke='rgba(255,255,255,0.15)' stroke-width='1'/%3E%3Cline x1='140' y1='200' x2='320' y2='240' stroke='rgba(255,255,255,0.15)' stroke-width='1'/%3E%3Cline x1='60' y1='300' x2='140' y2='200' stroke='rgba(255,255,255,0.15)' stroke-width='1'/%3E%3Cline x1='60' y1='300' x2='200' y2='340' stroke='rgba(255,255,255,0.15)' stroke-width='1'/%3E%3Cline x1='320' y1='240' x2='200' y2='340' stroke='rgba(255,255,255,0.15)' stroke-width='1'/%3E%3Cline x1='80' y1='80' x2='140' y2='200' stroke='rgba(255,255,255,0.1)' stroke-width='1'/%3E%3C/svg%3E"),
+                radial-gradient(ellipse at center, #2563eb 0%, #0f2d8a 65%);
+            background-size: 200px 200px, 100% 100%;
+            padding: 40px 32px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-content { position: relative; z-index: 1; }
+        .hero-title { font-size: 34px; letter-spacing: 1px; margin: 0; font-family: 'DM Serif Display', serif; }
+        .hero-subtitle { font-size: 14px; opacity: 0.85; margin-top: 8px; }
+        .hero-icon-pro {
+            width: 160px; height: 160px; margin: 0 auto 32px;
+            border-radius: 50%; background: rgba(255,255,255,0.15);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .hero-icon-pro img { width: 110px; height: 110px; filter: invert(1); opacity: 0.8; }
+
+        header img {
+            height: 64px; background: white; padding: 8px 12px; border-radius: 6px;
+        }
+        h1 { margin: 0; font-size: 20px; }
+        .subtitle { font-size: 13px; opacity: 0.9; }
+
+        .main-nav {
+            background: #0f2d8a; padding: 14px 32px;
+            display: flex; gap: 48px; align-items: center; justify-content: flex-end;
+            max-width: 1200px; margin-left: auto; margin-right: auto;
+        }
+        .nav-link {
+            color: white; text-decoration: none; font-size: 13px;
+            text-transform: uppercase; letter-spacing: 0.06em; opacity: 0.85;
+            padding: 6px 10px; border-radius: 6px; cursor: pointer; transition: all 0.2s;
+        }
+        .nav-link:hover { background: rgba(255,255,255,0.15); opacity: 1; }
+        .nav-link.active { box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+
+        .view-toggle { margin-top: 24px; }
+        .view-btn {
+            background: rgba(255,255,255,0.15); color: white;
+            border: 1px solid rgba(255,255,255,0.4); padding: 8px 16px;
+            border-radius: 20px; font-size: 13px; margin: 0 6px; cursor: pointer;
+        }
+        .view-btn.active { background: white; color: #1f4fd8; font-weight: 600; }
+
+        .container { display: flex; padding: 24px 32px; gap: 24px; }
+
+        .filters {
+            width: 300px; background: white; border: 1px solid #e0e7ff;
+            padding: 18px; border-radius: 12px; position: sticky; top: 24px; height: fit-content;
+        }
+        .filters h3 { font-size: 13px; color: #1f4fd8; text-transform: uppercase; margin: 20px 0 8px; }
+        .filters label { display: block; font-size: 13px; margin-bottom: 6px; }
+        .content { flex: 1; }
+
+        .dataset-card {
+            background: white; border: 1px solid #e0e7ff; padding: 20px;
+            border-radius: 14px; margin-bottom: 18px; cursor: pointer;
+            transition: box-shadow 0.25s, transform 0.25s;
+        }
+        .dataset-card:hover { box-shadow: 0 14px 30px rgba(31,79,216,0.18); transform: translateY(-3px); }
+
+        .badge {
+            display: inline-block; background: #eaf0ff; color: #1f4fd8;
+            font-size: 11px; border-radius: 6px; padding: 4px 8px; margin-right: 6px; margin-bottom: 6px;
+        }
+        .badge.dark { background: #1f4fd8; color: white; }
+        .meta { font-size: 12px; color: #6b7280; margin-top: 8px; }
+        .hidden { display: none !important; }
+
+        button {
+            background: #1f4fd8; color: white; border: none; padding: 11px 20px;
+            border-radius: 8px; cursor: pointer; font-weight: 500;
+        }
+        button.secondary { background: #eef2ff; color: #1f4fd8; }
+
+        .subtabs { display: flex; justify-content: center; gap: 12px; margin-bottom: 20px; }
+        .subtab-btn {
+            background: #eef2ff; color: #1f4fd8; border: none;
+            padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 13px;
+        }
+        .subtab-btn.active { background: #1f4fd8; color: white; font-weight: 600; }
+        .subtab-btn:hover { opacity: 0.85; }
+
+        .matrix-wrapper { display: flex; justify-content: center; margin-top: 10px; overflow-x: auto; }
+        .matrix-wrapper table {
+            border-collapse: collapse; background: white; border-radius: 12px;
+            overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.08); min-width: 600px;
+        }
+        .matrix-wrapper th {
+            background: #0f315e; color: white; font-weight: 600; font-size: 13px;
+            padding: 10px 12px; text-align: center;
+        }
+        .matrix-wrapper td {
+            padding: 10px 12px; font-size: 13px; text-align: center;
+            border-bottom: 1px solid #eef2ff; width: 90px; height: 38px;
+            transition: background 0.15s;
+        }
+        .matrix-wrapper td:first-child { text-align: left; font-weight: 500; background: #f8faff; }
+        .matrix-wrapper tr:hover td { background: #f1f5ff; }
+        .matrix-wrapper td.matrix-active { background: #2f5992; }
+        .matrix-wrapper tr:hover td.matrix-active { background: #1f3b60; }
+        .matrix-wrapper th, .matrix-wrapper td { border: 1px solid #eef2ff; }
+
+        .detail-header { margin-top: 18px; margin-bottom: 18px; }
+        .detail-submeta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+        .pill {
+            background: white; border: 1px solid #e0e7ff; padding: 8px 12px;
+            border-radius: 999px; font-size: 15px; color: #374151; font-weight: 500;
+        }
+        .pill span { font-weight: 700; color: #1f4fd8; }
+
+        .detail-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 18px 0; }
+        .detail-card {
+            background: white; border: 1px solid #e0e7ff; border-radius: 14px;
+            padding: 16px 18px; box-shadow: 0 6px 18px rgba(15,45,138,0.06); margin-bottom: 18px;
+        }
+        .detail-card h3 {
+            margin-top: 0; font-size: 14px; color: #1f4fd8;
+            text-transform: uppercase; letter-spacing: 0.04em;
+        }
+        #variable-detail-view .detail-card h3 {
+            margin-top: 0; margin-bottom: 14px; font-size: 18px; color: #111827;
+            font-weight: 600; text-transform: none; letter-spacing: normal;
+        }
+        @media (max-width: 900px) { .detail-grid { grid-template-columns: 1fr; } }
+
+        /* ===================== TOPIC LANDING ===================== */
+        #topic-landing {
+            padding: 40px 32px;
+        }
+        .topic-landing-intro {
+            text-align: center;
+            margin-bottom: 36px;
+        }
+        .topic-landing-intro h2 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 28px;
+            color: #0f2d8a;
+            margin: 0 0 8px;
+        }
+        .topic-landing-intro p {
+            color: #6b7280;
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .topic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .topic-card {
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            aspect-ratio: 4/3;
+            box-shadow: 0 8px 32px rgba(15,45,138,0.13);
+            transition: transform 0.28s cubic-bezier(.22,.68,0,1.2), box-shadow 0.28s;
+        }
+        .topic-card:hover {
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(15,45,138,0.22);
+        }
+        .topic-card-bg {
+            position: absolute; inset: 0;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.4s;
+        }
+        .topic-card:hover .topic-card-bg { transform: scale(1.06); }
+        .topic-card-overlay {
+            position: absolute; inset: 0;
+            display: flex; flex-direction: column;
+            justify-content: flex-end;
+            padding: 20px;
+            background: linear-gradient(to top, rgba(10,20,70,0.82) 0%, rgba(10,20,70,0.1) 60%, transparent 100%);
+        }
+        .topic-card-emoji {
+            font-size: 32px;
+            line-height: 1;
+            margin-bottom: 8px;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+        }
+        .topic-card-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 20px;
+            color: white;
+            margin: 0 0 4px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+        }
+        .topic-card-meta {
+            font-size: 12px;
+            color: rgba(255,255,255,0.75);
+            margin: 0;
+        }
+        .topic-card-badge {
+            position: absolute;
+            top: 14px; right: 14px;
+            background: rgba(255,255,255,0.18);
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+            letter-spacing: 0.04em;
+        }
+
+        /* breadcrumb inside list view */
+        .back-to-topics {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 13px; color: #1f4fd8; cursor: pointer;
+            margin-bottom: 16px; padding: 6px 0;
+            background: none; border: none; font-family: inherit;
+        }
+        .back-to-topics:hover { text-decoration: underline; }
+
+        .topic-banner {
+            background: linear-gradient(135deg, #1f4fd8, #0f2d8a);
+            border-radius: 14px;
+            padding: 20px 24px;
+            color: white;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .topic-banner-emoji { font-size: 40px; }
+        .topic-banner h2 { margin: 0 0 4px; font-family: 'DM Serif Display', serif; font-size: 22px; }
+        .topic-banner p { margin: 0; font-size: 13px; opacity: 0.85; }
+    </style>
+</head>
+
+<script>
+const topicsData = [
+    {
+        id: "knee",
+        title: "Glucorticoid Injections",
+        emoji: "🦵",
+        description: "Randomised trials on knee osteoarthritis interventions",
+        count: 7,
+        color: "#1a3fb5",
+        bg: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&q=80",
+        datasetIds: [1, 2, 3, 4, 5, 6, 7]
+    },
+    {
+        id: "hip",
+        title: " Oral glucosamine",
+        emoji: "🩻",
+        description: "Clinical trials focused on hip osteoarthritis",
+        count: 2,
+        color: "#0e6ba8",
+        bg: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=600&q=80",
+        datasetIds: [9, 10]
+    },
+    {
+        id: "hand",
+        title: "Hand OA",
+        emoji: "🤲",
+        description: "Trials addressing hand and thumb osteoarthritis",
+        count: 1,
+        color: "#7c3aed",
+        bg: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&q=80",
+        datasetIds: [8]
+    },
+    {
+        id: "pharmacological",
+        title: "Topical NSAIDs and capsaicin",
+        emoji: "💊",
+        description: "Glucocorticoids, NSAIDs, glucosamine, vitamin D",
+        count: 5,
+        color: "#0f766e",
+        bg: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&q=80",
+        datasetIds: [1, 2, 3, 5, 10]
+    },
+    {
+        id: "exercise",
+        title: "Exercise & Rehab",
+        emoji: "🏃",
+        description: "Exercise programmes and rehabilitation trials",
+        count: 2,
+        color: "#b45309",
+        bg: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&q=80",
+        datasetIds: [6, 9]
+    }
+];
+
+const datasetsData = [
+    { id:1,  shortName:"TOPNSAID",  title:"Topical NSAIDs and Capsaicin for Knee Osteoarthritis",     author:"Underwood",   description:"Randomised clinical trial evaluating the effectiveness of topical NSAIDs and capsaicin in knee osteoarthritis.", participants:"282", OA_type:"Knee OA",        badges:["Topical NSAID","Capsaicin","Pain management"],    detail:{ year_publication:"2008", design:"Clinical Trial", intervention_type:"Any topical NSAID",                                                               control_type:"Any oral NSAID",                                        topic:"Topical NSAIDS and capsaicin",      institution:"Primary Care Research Unit, UK",    categories:["Pain","Medication use","NSAIDs"] } },
+    { id:2,  shortName:"GCINJ",     title:"Glucocorticoid Injections for Knee Osteoarthritis",         author:"Ravaud et al.",description:"Clinical trial assessing joint lavage and glucocorticoid injections for knee osteoarthritis.", participants:"98",  OA_type:"Knee OA",        badges:["Glucocorticoid injections","Joint lavage"],        detail:{ year_publication:"1999", design:"Clinical Trial", intervention_type:"Joint lavage with placebo, Joint lavage with cortivazol, Cortivazol",           control_type:"Placebo",                                               topic:"Glucocorticoid injections",         institution:"INSERM, France",                   categories:["Pain","Inflammation","Injections"] } },
+    { id:3,  shortName:"GLUCO",     title:"Oral Glucosamine for Knee Osteoarthritis",                  author:"Coulson et al.",description:"Study comparing oral glucosamine with green-lipped mussel supplementation in knee OA.",  participants:"38",  OA_type:"Knee OA",        badges:["Glucosamine","Supplements"],                       detail:{ year_publication:"2013", design:"Clinical Trial", intervention_type:"Glucosamine sulphate-potassium chloride 3000 mg/day",                          control_type:"Green-lipped mussel 3000 mg/day (GlycOmega PLUS)",      topic:"Oral glucosamine",                  institution:"University of Otago",              categories:["Supplements","Pain","Functional outcomes"] } },
+    { id:4,  shortName:"ORTHO1",    title:"Braces and Orthoses in Knee Osteoarthritis",                author:"Hunt MA",     description:"Trial evaluating lateral wedge insoles with arch support in knee osteoarthritis.",         participants:"27",  OA_type:"Knee OA",        badges:["Orthoses","Insoles"],                              detail:{ year_publication:"2017", design:"Clinical Trial", intervention_type:"Lateral wedge insoles with arch support",                                      control_type:"Lateral wedge insoles",                                 topic:"Braces and orthoses",               institution:"University of British Columbia",   categories:["Biomechanics","Pain","Mobility"] } },
+    { id:5,  shortName:"VITD",      title:"Vitamin D Supplementation in Knee Osteoarthritis",          author:"Jin",         description:"Randomised controlled trial examining monthly high-dose vitamin D supplementation in knee OA.", participants:"413", OA_type:"Knee OA",        badges:["Vitamin D","Supplementation"],                     detail:{ year_publication:"2016", design:"Clinical Trial", intervention_type:"Vitamin D 50000 IU (1.25 mg) monthly",                                       control_type:"Placebo",                                               topic:"Vitamin D",                         institution:"Tianjin Medical University",       categories:["Supplements","Bone health","Pain"] } },
+    { id:6,  shortName:"EXE1",      title:"Exercise Programmes for Knee Osteoarthritis",               author:"Levinger",    description:"Study assessing structured exercise programmes compared with usual activities in knee OA.",   participants:"28",  OA_type:"Knee OA",        badges:["Exercise programmes","Rehabilitation"],            detail:{ year_publication:"2018", design:"Clinical Trial", intervention_type:"Exercise programme",                                                          control_type:"Control (usual activities)",                            topic:"Exercise programmes",               institution:"Victoria University",              categories:["Physical activity","Function","Quality of life"] } },
+    { id:7,  shortName:"ORTHO2",    title:"Lateral Wedge Insoles for Knee Osteoarthritis",             author:"Barrios JA",  description:"Randomised trial assessing lateral wedge insoles compared with sham treatment.",            participants:"71",  OA_type:"Knee OA",        badges:["Orthoses","Sham control"],                         detail:{ year_publication:"2009", design:"Clinical Trial", intervention_type:"Lateral wedge insoles",                                                        control_type:"Sham",                                                  topic:"Braces and orthoses",               institution:"Rush University Medical Center",   categories:["Biomechanics","Pain"] } },
+    { id:8,  shortName:"HANDOA",    title:"Non-pharmacological Treatment for Hand Osteoarthritis",     author:"Wade",        description:"Pilot study evaluating taping as a non-pharmacological intervention for thumb OA.",         participants:"10",  OA_type:"Hand OA (Thumb)", badges:["Hand OA","Taping"],                                detail:{ year_publication:"2018", design:"Pilot Clinical Trial", intervention_type:"Tape",                                                                    control_type:"Placebo tape",                                          topic:"Hand OA non-surg non-pharma",       institution:"University of Nottingham",         categories:["Pain","Hand function","Non-pharmacological"] } },
+    { id:9,  shortName:"EXEHIP",    title:"Exercise Rehabilitation for Hip Osteoarthritis",            author:"Bearne",      description:"Clinical trial evaluating rehabilitation exercise programmes for hip OA.",                participants:"48",  OA_type:"Hip OA",         badges:["Exercise programmes","Rehabilitation"],            detail:{ year_publication:"2011", design:"Clinical Trial", intervention_type:"Rehabilitation group",                                                        control_type:"Control (usual GP care)",                               topic:"Exercise programmes",               institution:"King's College London",            categories:["Physical therapy","Pain","Mobility"] } },
+    { id:10, shortName:"PLACEBOIA", title:"Placebo Effects After Intra-articular Therapy in Hip OA",   author:"Lambert",     description:"Study examining placebo responses following intra-articular therapies in hip OA.",         participants:"52",  OA_type:"Hip OA",         badges:["Placebo effect","Injections"],                     detail:{ year_publication:"2007", design:"Clinical Trial", intervention_type:"Triamcinolone 40 mg, Corticosteroid injection, Bupivacaine 10 mg",             control_type:"Placebo",                                               topic:"Placebo effects after IA therapy",  institution:"University of Manchester",         categories:["Placebo","Injections","Pain outcomes"] } }
+];
+</script>
+
+<script>
+const variablesData = [
+    { id:1, name:"WOMAC Pain", description:"Patient-reported pain related to osteoarthritis measured using the WOMAC pain subscale", type:"Numeric", unit:"0–100", follow_up:"0–6 weeks, 7–12 weeks, 13–52 weeks, >52 weeks", detail_harmonization:{ datasets:["TOPNSAID","GLUCO","ORTHO1","VITD","EXE1","ORTHO2","EXEHIP","PLACEBOIA"], harmonized:["true","true","true","true","true","true","false","false"], description:["WOMAC pain collected on a 0–20 scale and rescaled to 0–100.","Already measured on 0–100 scale.","Sum score (0–500) rescaled to 0–100.","Extended WOMAC scale mapped to 0–100.","NRS pain converted (×10).","Already aligned 0–100 scale.","VAS pain converted to 0–100.","Already harmonised 0–100 metric."], syntax:["Pain = (WOMAC_pain / 20) * 100","Pain = WOMAC_pain","Pain = WOMAC_pain / 5","Pain = (WOMAC_pain / 240) * 100","Pain = NRS_pain * 10","Pain = NRS_pain","Pain = VAS_pain * 10","Pain = WOMAC_pain"] } },
+    { id:2, name:"WOMAC Physical Functioning", description:"Assessment of physical function limitations due to OA using the WOMAC function subscale", type:"Numeric", unit:"0–100", follow_up:"0–6 weeks, 7–12 weeks, 13–52 weeks, >52 weeks", detail_harmonization:{ datasets:["TOPNSAID","GLUCO","ORTHO1","VITD","EXE1","ORTHO2","EXEHIP","PLACEBOIA"], harmonized:["true","true","true","true","true","true","true","false"], description:["WOMAC function rescaled from 0–20.","Standard WOMAC 0–100.","Sum score harmonised to 0–100.","Extended function scale mapped to 0–100.","Exercise trial functional score mapped to WOMAC scale.","Orthoses trial function score rescaled.","Rehab function score harmonised.","Original scale not transformed."], syntax:["Function = (score / 20) * 100","Function = score","Function = score / 5","Function = (score / 240) * 100","Function = baseline-adjusted scaling","Function = linear transform","Function = z-score mapping","Function = raw score"] } },
+    { id:3, name:"WOMAC Stiffness", description:"Evaluation of joint stiffness using the WOMAC stiffness subscale", type:"Numeric", unit:"0–100", follow_up:"0–6 weeks, 7–12 weeks, 13–52 weeks, >52 weeks", detail_harmonization:{ datasets:["TOPNSAID","GLUCO","ORTHO1","VITD","ORTHO2","PLACEBOIA"], harmonized:["true","true","true","true","true","false"], description:["Rescaled stiffness score.","Native WOMAC scale.","Summed questionnaire mapped to 0–100.","Extended scale harmonised.","VAS-derived stiffness proxy.","No harmonisation applied."], syntax:["Stiffness = (score / 20) * 100","Stiffness = score","Stiffness = score / 5","Stiffness = transformed score","Stiffness = VAS * 10","Stiffness = raw"] } },
+    { id:4, name:"WOMAC Total Score", description:"Composite score combining pain, stiffness and physical function domains", type:"Numeric", unit:"0–100", follow_up:"0–6 weeks, 7–12 weeks, 13–52 weeks, >52 weeks", detail_harmonization:{ datasets:["TOPNSAID","GLUCO","ORTHO1","VITD","ORTHO2","PLACEBOIA"], harmonized:["true","true","true","true","false","false"], description:["Composite WOMAC harmonised.","Standard total score.","Derived from summed subscales.","Mapped from extended WOMAC.","Orthoses trial proxy score.","No harmonisation applied."], syntax:["Total = (pain + function + stiffness)","Total = WOMAC_total","Total = sum(score)","Total = rescaled","Total = proxy transformation","Total = raw"] } },
+    { id:5, name:"Pain (VAS)", description:"Pain intensity measured using a visual analogue scale", type:"Numeric", unit:"0–10", follow_up:"0–6 weeks, 7–12 weeks, 13–52 weeks, >52 weeks", detail_harmonization:{ datasets:["GCINJ","ORTHO1","VITD","ORTHO2"], harmonized:["true","true","true","false"], description:["VAS converted to WOMAC scale.","Mapped to WOMAC-equivalent scale.","Scaled to harmonised metric.","Left untransformed."], syntax:["Pain = VAS * 10","Pain = linear mapping","Pain = rescaled","Pain = raw VAS"] } },
+    { id:6, name:"Global Status", description:"Patient global assessment of disease status", type:"Ordinal", unit:"Likert scale", follow_up:"7–12 weeks, 13–52 weeks, >52 weeks", detail_harmonization:{ datasets:["TOPNSAID","ORTHO1","VITD","PLACEBOIA"], harmonized:["true","true","false","false"], description:["Standardised Likert mapping.","Aligned scoring system.","Not harmonised due to scale differences.","Raw ordinal preserved."], syntax:["Global = recoded Likert","Global = standardised","Global = raw scale","Global = original"] } },
+    { id:7, name:"(Q) DASH Score", description:"Disabilities of the Arm, Shoulder and Hand questionnaire score", type:"Numeric", unit:"0–100", follow_up:"0–6 weeks", detail_harmonization:{ datasets:["HANDOA"], harmonized:["true"], description:["Already standard DASH scoring system."], syntax:["DASH = score"] } },
+    { id:8, name:"Age", description:"Age of the participant at baseline assessment", type:"Numeric", unit:"Years", follow_up:"", detail_harmonization:{ datasets:["TOPNSAID","GCINJ","GLUCO","ORTHO1","VITD","EXE1","ORTHO2","HANDOA","EXEHIP","PLACEBOIA"], harmonized:Array(10).fill("true"), description:Array(10).fill("Age already harmonised across all datasets."), syntax:Array(10).fill("Age = baseline_age") } },
+    { id:9, name:"Gender", description:"Self-reported gender of the participant", type:"Categorical", unit:"Male / Female / Other", follow_up:"", detail_harmonization:{ datasets:["TOPNSAID","GCINJ","GLUCO","ORTHO1","VITD","ORTHO2","HANDOA","PLACEBOIA"], harmonized:["true","true","true","true","true","true","true","false"], description:["Standard binary mapping.","Aligned coding scheme.","Harmonised category labels.","Mapped across studies.","Unified classification.","Standardised encoding.","Consistent coding applied.","Original categories retained."], syntax:["Gender = recode","Gender = standardise","Gender = mapping","Gender = harmonised coding","Gender = recode","Gender = recode","Gender = mapping","Gender = raw"] } },
+    { id:10, name:"Body Mass Index (BMI)", description:"Body mass index calculated from height and weight", type:"Numeric", unit:"kg/m²", follow_up:"", detail_harmonization:{ datasets:["TOPNSAID","GCINJ","GLUCO","ORTHO1","VITD","EXE1","ORTHO2","EXEHIP","PLACEBOIA"], harmonized:Array(9).fill("true"), description:Array(9).fill("BMI computed uniformly from height/weight."), syntax:Array(9).fill("BMI = weight / height^2") } }
+];
+</script>
+
+<script>
+let datasetViewMode = "detailed";
+let currentTopicId = null;
+
+function setActiveNav(tabName) {
+    document.querySelectorAll(".nav-link").forEach(el => el.classList.remove("active"));
+    const map = { home: "nav-home", datasets: "nav-datasets", variables: "nav-variables" };
+    if (map[tabName]) document.getElementById(map[tabName])?.classList.add("active");
+}
+
+function setDatasetView(mode) {
+    datasetViewMode = mode;
+    document.getElementById("btn-detailed").classList.toggle("active", mode === "detailed");
+    document.getElementById("btn-compact").classList.toggle("active", mode === "compact");
+    renderDatasets();
+    renderVariables();
+}
+
+/* ========== TOPIC LANDING ========== */
+function showHome() {
+    setActiveNav("home");
+    hideAllViews();
+    document.getElementById("topic-landing").classList.remove("hidden");
+    document.querySelector(".hero").classList.remove("hidden");
+    currentTopicId = null;
+}
+
+function renderTopics() {
+    const grid = document.getElementById("topic-grid");
+    grid.innerHTML = "";
+    topicsData.forEach(t => {
+        const card = document.createElement("div");
+        card.className = "topic-card";
+        card.innerHTML = `
+            <div class="topic-card-bg" style="background-image:url('${t.bg}')"></div>
+            <div class="topic-card-overlay">
+                <div class="topic-card-emoji">${t.emoji}</div>
+                <h3 class="topic-card-title">${t.title}</h3>
+                <p class="topic-card-meta">${t.description}</p>
+            </div>
+            <span class="topic-card-badge">${t.count} datasets</span>
+        `;
+        card.onclick = () => openTopic(t.id);
+        grid.appendChild(card);
+    });
+}
+
+function openTopic(topicId) {
+    currentTopicId = topicId;
+    const topic = topicsData.find(t => t.id === topicId);
+    hideAllViews();
+    setActiveNav("datasets");
+
+    // Update topic banner
+    document.getElementById("topic-banner-emoji").textContent = topic.emoji;
+    document.getElementById("topic-banner-title").textContent = topic.title;
+    document.getElementById("topic-banner-desc").textContent = topic.description;
+
+    document.getElementById("list-view").classList.remove("hidden");
+    renderDatasets();
+}
+
+/* Helper: returns a unique human-readable label for a dataset.
+   Format: "Author (Year) — Title truncated to 40 chars"
+   The shortName is kept only as an internal key — never shown to users. */
+function dsLabel(ds) {
+    const maxLen = 42;
+    const titleShort = ds.title.length > maxLen
+        ? ds.title.slice(0, maxLen).trimEnd() + "…"
+        : ds.title;
+    return `${ds.author} (${ds.detail.year_publication}) — ${titleShort}`;
+}
+
+/* Same but even shorter, for compact spaces like matrix headers and tabs */
+function dsLabelShort(ds) {
+    return `${ds.author} (${ds.detail.year_publication})`;
+}
+
+function renderDatasets() {
+    const container = document.getElementById("datasets-list");
+    container.innerHTML = "";
+
+    // filter by topic if one is selected
+    let toShow = datasetsData;
+    if (currentTopicId) {
+        const topic = topicsData.find(t => t.id === currentTopicId);
+        if (topic) toShow = datasetsData.filter(d => topic.datasetIds.includes(d.id));
+    }
+
+    toShow.forEach(c => {
+        const card = document.createElement("div");
+        card.className = "dataset-card";
+        const badgesHTML = c.badges.map(b => `<span class="badge">${b}</span>`).join("") + `<span class="badge dark">IPD available</span>`;
+        card.innerHTML = `
+            <h3>
+                <span style="color:#1f4fd8;font-weight:600;margin-right:8px;">${c.author} (${c.detail.year_publication})</span>
+                ${c.title}
+            </h3>
+            ${datasetViewMode === "detailed" ? `
+                <div>${badgesHTML}</div>
+                <p>${c.description}</p>
+                <div class="meta">Participants: ${c.participants} · ${c.OA_type}</div>
+            ` : ""}
+        `;
+        card.onclick = () => renderDatasetDetail(c.id);
+        container.appendChild(card);
+    });
+
+    document.getElementById("datasets-count").textContent = toShow.length + " Datasets";
+}
+
+function renderDatasetDetail(id) {
+    const c = datasetsData.find(x => x.id === id);
+    document.getElementById("list-view").classList.add("hidden");
+    document.getElementById("detail-view").classList.remove("hidden");
+    document.getElementById("detail-author").innerText = c.author;
+    document.getElementById("detail-year").innerText = c.detail.year_publication;
+    document.getElementById("detail-institution").innerText = c.detail.institution;
+    document.getElementById("detail-OA").innerText = c.OA_type;
+    document.getElementById("detail-design").innerText = c.detail.design;
+    document.getElementById("detail-interventions").innerText = c.detail.intervention_type;
+    document.getElementById("detail-control").innerText = c.detail.control_type;
+    document.getElementById("detail-participants").innerText = c.participants;
+    document.getElementById("detail-topic").innerText = c.detail.topic;
+    const container = document.getElementById("detail-categories");
+    container.innerHTML = "";
+    c.detail.categories.forEach(cat => { container.innerHTML += `<span class="badge">${cat}</span>`; });
+}
+
+function backToList() {
+    document.getElementById("detail-view").classList.add("hidden");
+    document.getElementById("list-view").classList.remove("hidden");
+}
+
+function backToTopics() {
+    showHome();
+}
+
+/* ========== SHOW DATASETS (nav click) ========== */
+function showDatasets() {
+    setActiveNav("datasets");
+    currentTopicId = null;
+    hideAllViews();
+    document.getElementById("topic-banner-emoji").textContent = "📦";
+    document.getElementById("topic-banner-title").textContent = "All Datasets";
+    document.getElementById("topic-banner-desc").textContent = "Browsing the complete dataset catalogue";
+    document.getElementById("list-view").classList.remove("hidden");
+    renderDatasets();
+}
+
+/* ========== VARIABLES ========== */
+function showVariables() {
+    setActiveNav("variables");
+    hideAllViews();
+    document.getElementById("variables-view").classList.remove("hidden");
+    renderVariables();
+    requestAnimationFrame(() => renderDatasetFilter());
+}
+
+function hideAllViews() {
+    ["topic-landing","list-view","detail-view","variables-view","variable-detail-view"]
+        .forEach(id => document.getElementById(id)?.classList.add("hidden"));
+    document.querySelector(".hero")?.classList.add("hidden");
+}
+
+function showVariableList() {
+    document.getElementById("variables-list-view").classList.remove("hidden");
+    document.getElementById("variables-matrix-view").classList.add("hidden");
+    document.getElementById("btn-list").classList.add("active");
+    document.getElementById("btn-matrix").classList.remove("active");
+}
+
+function showMatrix() {
+    document.getElementById("variables-list-view").classList.add("hidden");
+    document.getElementById("variables-matrix-view").classList.remove("hidden");
+    document.getElementById("btn-list").classList.remove("active");
+    document.getElementById("btn-matrix").classList.add("active");
+    renderMatrix();
+}
+
+function backToVariables() {
+    document.getElementById("variable-detail-view").classList.add("hidden");
+    document.getElementById("variables-view").classList.remove("hidden");
+}
+
+function renderVariables() {
+    const container = document.getElementById("variables-list");
+    container.innerHTML = "";
+    variablesData.forEach(v => {
+        const card = document.createElement("div");
+        card.className = "dataset-card";
+        if (datasetViewMode === "detailed") {
+            card.innerHTML = `<h3>${v.name}</h3><p>${v.description}</p><div><span class="badge">${v.type}</span><span class="badge">${v.unit}</span></div>`;
+        } else {
+            card.innerHTML = `<h3>${v.name}</h3>`;
+        }
+        card.onclick = () => openVariableDetail(v.id);
+        container.appendChild(card);
+    });
+}
+
+function renderHarmonizationDetail(v) {
+    const tabsContainer = document.getElementById("harmo-tabs");
+    tabsContainer.innerHTML = "";
+    const combined = v.detail_harmonization.datasets.map((code, i) => ({
+        code, harmonized: v.detail_harmonization.harmonized[i] === "true",
+        description: v.detail_harmonization.description[i],
+        syntax: v.detail_harmonization.syntax[i]
+    }));
+    combined.forEach((item, index) => {
+        const btn = document.createElement("button");
+        btn.className = "subtab-btn";
+        const ds = datasetsData.find(d => d.shortName === item.code);
+        const tabLabel = ds ? dsLabelShort(ds) : item.code;
+        btn.innerHTML = `<span style="display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px;background:${item.harmonized ? '#22c55e' : '#ef4444'};"></span>${tabLabel}`;
+        btn.onclick = () => {
+            document.querySelectorAll("#harmo-tabs .subtab-btn").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            renderHarmoPanel(item);
+        };
+        btn.style.border = "1px solid #1f4fd8";
+        if (index === 0) { btn.classList.add("active"); renderHarmoPanel(item); }
+        tabsContainer.appendChild(btn);
+    });
+}
+
+function renderHarmoPanel(item) {
+    document.getElementById("harmo-detail-panel").innerHTML = `
+        <div style="margin-bottom:10px;"><span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:${item.harmonized ? '#dcfce7' : '#fee2e2'};color:${item.harmonized ? '#166534' : '#991b1b'};">${item.harmonized ? '✔ Harmonized' : '✖ Not harmonized'}</span></div>
+        <div style="margin-bottom:10px;"><strong style="font-size:13px;">Description</strong><p style="margin:4px 0 0;font-size:13px;line-height:1.4;">${item.description}</p></div>
+        <div><strong style="font-size:13px;">Syntax / transformation</strong><p style="margin:4px 0 0;font-size:13px;line-height:1.4;">${item.syntax}</p></div>
+    `;
+}
+
+function openVariableDetail(id) {
+    const v = variablesData.find(x => x.id === id);
+    document.getElementById("variables-view").classList.add("hidden");
+    document.getElementById("variable-detail-view").classList.remove("hidden");
+    document.getElementById("var-title").innerText = v.name;
+    document.getElementById("var-desc").innerText = v.description;
+    document.getElementById("var-type").innerText = v.type;
+    document.getElementById("var-unit").innerText = v.unit;
+    document.getElementById("var-follow_up").innerText = v.follow_up;
+    const container = document.getElementById("var-harmonization");
+    container.innerHTML = "";
+    let html = `<div style="background:white;border:1px solid #e0e7ff;border-radius:12px;padding:10px 12px;">`;
+    v.detail_harmonization.datasets.forEach((code, index) => {
+        const c = datasetsData.find(col => col.shortName === code);
+        const isH = v.detail_harmonization.harmonized[index] === "true";
+        const label = c ? dsLabel(c) : code;
+        html += `<div style="display:flex;align-items:center;gap:10px;padding:6px 0;font-size:13px;border-bottom:1px solid #f1f5ff;">
+            <span style="width:10px;height:10px;flex-shrink:0;border-radius:3px;display:inline-block;background:${isH ? '#22c55e' : '#ef4444'};"></span>
+            <span>${label}</span>
+        </div>`;
+    });
+    html += `</div>`;
+    container.innerHTML = html;
+    renderHarmonizationDetail(v);
+}
+
+function renderMatrix() {
+    const container = document.getElementById("matrix-container");
+    let html = `<table class="matrix-table"><tr><th style="text-align:left">Variable</th><th colspan="${datasetsData.length}" style="text-align:center;font-weight:600;">Datasets</th></tr><tr><th></th>`;
+    datasetsData.forEach(c => { html += `<th title="${c.title}" style="font-size:11px;line-height:1.3;">${c.author}<br><span style="font-weight:400;opacity:0.75;">(${c.detail.year_publication})</span></th>`; });
+    html += "</tr>";
+    variablesData.forEach(v => {
+        html += `<tr><td>${v.name}</td>`;
+        datasetsData.forEach(c => {
+            const present = v.detail_harmonization.datasets.includes(c.shortName);
+            html += `<td class="${present ? 'matrix-active' : ''}"></td>`;
+        });
+        html += "</tr>";
+    });
+    html += "</table>";
+    container.innerHTML = html;
+}
+
+function renderDatasetFilter() {
+    const container = document.getElementById("filter-datasets");
+    if (!container) return;
+    container.innerHTML = "";
+    datasetsData.forEach(c => {
+        const label = document.createElement("label");
+        label.innerHTML = `<input type="checkbox"> ${dsLabelShort(c)}`;
+        container.appendChild(label);
+    });
+}
+
+window.onload = function () {
+    renderTopics();
+    // Hero starts visible, topic landing visible
+};
+</script>
+
+<body>
+
+<header>
+    <img src="https://www.erasmusmc.nl/-/media/erasmusmc/images/8-gezondheidwetenschappen/hag/logo_oa_trialbank_kleur.jpg" alt="OA Trial Bank logo">
+    <div>
+        <h1>OA Trial Bank - Erasmus MC - HAG</h1>
+        <div class="subtitle">Randomized Clinical Trials · Individual Patient Data · Demo</div>
+    </div>
+    <nav class="main-nav" style="margin-left:auto;">
+        <a id="nav-home" class="nav-link active" onclick="showHome()">Home</a>
+        <a id="nav-datasets" class="nav-link" onclick="showDatasets()">Datasets</a>
+        <a id="nav-variables" class="nav-link" onclick="showVariables()">Variables</a>
+        <a class="nav-link">Networks</a>
+        <a class="nav-link">More ▾</a>
+    </nav>
+</header>
+
+<!-- HERO (home only) -->
+<section class="hero" id="main-hero">
+    <div class="hero-content">
+        <div class="hero-icon-pro">
+            <img src="./Designer.png" alt="Osteoarthritis knee illustration">
+        </div>
+        <h2 class="hero-title">Osteoarthritis Datasets</h2>
+        <p class="hero-subtitle">Data & sample datasets</p>
+        <div class="view-toggle">
+            <button id="btn-detailed" class="view-btn active" onclick="setDatasetView('detailed')">Detailed</button>
+            <button id="btn-compact" class="view-btn" onclick="setDatasetView('compact')">Compact</button>
+        </div>
+    </div>
+</section>
+
+<!-- ========== TOPIC LANDING ========== -->
+<div id="topic-landing" style="padding:40px 32px;">
+    <div class="topic-landing-intro">
+        <h2>Browse by Topic</h2>
+        <p>Select a category to explore the datasets within that research area</p>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+</div>
+
+<!-- ========== LIST VIEW ========== -->
+<div id="list-view" class="container hidden">
+    <aside class="filters">
+        <h3>📊 Data categories</h3>
+        <label><input type="checkbox"> Glucocorticoid injections</label>
+        <label><input type="checkbox"> Oral glucosamine</label>
+        <label><input type="checkbox"> Topical NSAIDs and capsaicin</label>
+        <label><input type="checkbox"> Exercise programmes</label>
+        <label><input type="checkbox"> Placebo effects after IA therapy</label>
+        <label><input type="checkbox"> Vitamin D</label>
+        <label><input type="checkbox"> Braces and orthoses</label>
+        <label><input type="checkbox"> OA management programs</label>
+        <label><input type="checkbox"> Hand OA</label>
+        <label><input type="checkbox"> Other</label>
+        <h3>🦴 Anatomical site</h3>
+        <label><input type="checkbox"> Knee</label>
+        <label><input type="checkbox"> Hip</label>
+        <label><input type="checkbox"> Hand</label>
+        <label><input type="checkbox"> Spine</label>
+        <label><input type="checkbox"> Neck</label>
+        <label><input type="checkbox"> Shoulder</label>
+        <label><input type="checkbox"> Generalised OA</label>
+        <h3>💊 Dataset type</h3>
+        <label><input type="checkbox"> WOMAC</label>
+        <label><input type="checkbox"> VAS</label>
+        <label><input type="checkbox"> Quality of life</label>
+        <label><input type="checkbox"> Performance measures</label>
+        <label><input type="checkbox"> Imaging</label>
+        <label><input type="checkbox"> Medication use</label>
+    </aside>
+    <main class="content">
+        <!-- Topic banner -->
+        <div class="topic-banner">
+            <div class="topic-banner-emoji" id="topic-banner-emoji">📦</div>
+            <div>
+                <h2 id="topic-banner-title">All Datasets</h2>
+                <p id="topic-banner-desc">Browsing the complete dataset catalogue</p>
+            </div>
+            <button class="secondary" style="margin-left:auto;" onclick="backToTopics()">← All Topics</button>
+        </div>
+        <strong id="datasets-count">Datasets</strong>
+        <div id="datasets-list"></div>
+    </main>
+</div>
+
+<!-- ========== DETAIL VIEW ========== -->
+<div id="detail-view" class="container hidden">
+    <main class="content">
+        <button class="secondary" onclick="backToList()">← Back to catalogue</button>
+        <div class="detail-header">
+            <h2 id="detail-title"></h2>
+            <div class="detail-submeta">
+                <span class="pill">Author: <span id="detail-author"></span></span>
+                <span class="pill">Year: <span id="detail-year"></span></span>
+            </div>
+        </div>
+        <div class="detail-grid">
+            <div class="detail-card">
+                <h3>Study information</h3>
+                <p><strong>Institution:</strong> <span id="detail-institution"></span></p>
+                <p><strong>Study design:</strong> <span id="detail-design"></span></p>
+                <p><strong>Topic:</strong> <span id="detail-topic"></span></p>
+                <p><strong>OA type:</strong> <span id="detail-OA"></span></p>
+            </div>
+            <div class="detail-card">
+                <h3>Intervention</h3>
+                <p><strong>Intervention group:</strong><br><span id="detail-interventions"></span></p>
+                <p><strong>Control group:</strong><br><span id="detail-control"></span></p>
+            </div>
+            <div class="detail-card">
+                <h3>Participants</h3>
+                <p style="font-size:28px;font-weight:700;color:#1f4fd8;"><span id="detail-participants"></span></p>
+            </div>
+        </div>
+        <div class="detail-card">
+            <h3>Data categories</h3>
+            <div id="detail-categories"></div>
+        </div>
+        <div class="detail-card">
+            <h3>Data access</h3>
+            <p>Individual patient data are available upon reasonable request, subject to OA Trial Bank approval and data access agreement.</p>
+            <button>How to request data</button>
+        </div>
+    </main>
+</div>
+
+<!-- ========== VARIABLES MAIN VIEW ========== -->
+<div id="variables-view" class="container hidden">
+    <aside class="filters">
+        <h3>📚 Datasets</h3>
+        <div id="filter-datasets"></div>
+        <h3>📊 Variable type</h3>
+        <label><input type="checkbox"> Numeric</label>
+        <label><input type="checkbox"> Imaging</label>
+        <label><input type="checkbox"> Questionnaire</label>
+        <h3>📏 Units</h3>
+        <label><input type="checkbox"> 0–10</label>
+        <label><input type="checkbox"> 0–100</label>
+        <label><input type="checkbox"> mm</label>
+        <h3>🧪 Domain</h3>
+        <label><input type="checkbox"> Pain</label>
+        <label><input type="checkbox"> Function</label>
+        <label><input type="checkbox"> Structure</label>
+    </aside>
+    <main class="content">
+        <div class="subtabs">
+            <button id="btn-list" class="subtab-btn active" onclick="showVariableList()">List</button>
+            <button id="btn-matrix" class="subtab-btn" onclick="showMatrix()">Matrix</button>
+        </div>
+        <div id="variables-list-view"><div id="variables-list"></div></div>
+        <div id="variables-matrix-view" class="hidden">
+            <div class="matrix-wrapper"><div id="matrix-container"></div></div>
+        </div>
+    </main>
+</div>
+
+<!-- ========== VARIABLE DETAIL ========== -->
+<div id="variable-detail-view" class="container hidden">
+    <main class="content">
+        <button class="secondary" onclick="backToVariables()">← Back</button>
+        <h2 id="var-title"></h2>
+        <p id="var-desc"></p>
+        <p><strong>Type:</strong> <span id="var-type"></span></p>
+        <p><strong>Unit:</strong> <span id="var-unit"></span></p>
+        <p><strong>Follow-up:</strong> <span id="var-follow_up"></span></p>
+        <div class="detail-card">
+            <h3>Harmonization status per source</h3>
+            <div id="var-harmonization"></div>
+        </div>
+        <div class="detail-card">
+            <h3>Harmonization details per source</h3>
+            <div id="harmo-detail-wrapper">
+                <div id="harmo-tabs" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;"></div>
+                <div id="harmo-detail-panel" style="background:white;border:1px solid #e0e7ff;border-radius:12px;padding:14px;"></div>
+            </div>
+        </div>
+    </main>
+</div>
+
+</body>
+</html>
