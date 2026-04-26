@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Test el blog de disnelly</title>
+    <title>OA Trial Bank (Demo)</title>
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { box-sizing: border-box; }
@@ -269,9 +269,9 @@
 const topicsData = [
     {
         id: "knee",
-        title: "America del Sur",
+        title: "Knee OA",
         emoji: "🦵",
-        description: "Distintos lugares de sudamerica que he visitado",
+        description: "Randomised trials on knee osteoarthritis interventions",
         count: 7,
         color: "#1a3fb5",
         bg: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&q=80",
@@ -279,7 +279,7 @@ const topicsData = [
     },
     {
         id: "hip",
-        title: "America del Norte",
+        title: "Hip OA",
         emoji: "🩻",
         description: "Clinical trials focused on hip osteoarthritis",
         count: 2,
@@ -289,7 +289,7 @@ const topicsData = [
     },
     {
         id: "hand",
-        title: "Africa",
+        title: "Hand OA",
         emoji: "🤲",
         description: "Trials addressing hand and thumb osteoarthritis",
         count: 1,
@@ -298,8 +298,8 @@ const topicsData = [
         datasetIds: [8]
     },
     {
-        id: "Europa",
-        title: "Topical NSAIDs and capsaicin",
+        id: "pharmacological",
+        title: "Pharmacological",
         emoji: "💊",
         description: "Glucocorticoids, NSAIDs, glucosamine, vitamin D",
         count: 5,
@@ -308,7 +308,7 @@ const topicsData = [
         datasetIds: [1, 2, 3, 5, 10]
     },
     {
-        id: "Asia",
+        id: "exercise",
         title: "Exercise & Rehab",
         emoji: "🏃",
         description: "Exercise programmes and rehabilitation trials",
@@ -378,31 +378,30 @@ function showHome() {
 function renderTopics() {
     const grid = document.getElementById("topic-grid");
     grid.innerHTML = "";
-    topicsData.forEach(t => {
+    topicsData.forEach((t, index) => {
         const card = document.createElement("div");
         card.className = "topic-card";
         card.innerHTML = `
             <div class="topic-card-bg" style="background-image:url('${t.bg}')"></div>
             <div class="topic-card-overlay">
-                <div class="topic-card-emoji">${t.emoji}</div>
                 <h3 class="topic-card-title">${t.title}</h3>
                 <p class="topic-card-meta">${t.description}</p>
             </div>
             <span class="topic-card-badge">${t.count} datasets</span>
         `;
-        card.onclick = () => openTopic(t.id);
+        card.onclick = () => openTopic(index);
         grid.appendChild(card);
     });
 }
 
-function openTopic(topicId) {
-    currentTopicId = topicId;
-    const topic = topicsData.find(t => t.id === topicId);
+function openTopic(topicIndex) {
+    currentTopicId = topicIndex;
+    const topic = topicsData[topicIndex];
     hideAllViews();
     setActiveNav("datasets");
 
-    // Update topic banner
-    document.getElementById("topic-banner-emoji").textContent = topic.emoji;
+    document.getElementById("topic-banner-emoji").textContent = "";
+    document.getElementById("topic-banner-emoji").style.display = "none";
     document.getElementById("topic-banner-title").textContent = topic.title;
     document.getElementById("topic-banner-desc").textContent = topic.description;
 
@@ -432,8 +431,8 @@ function renderDatasets() {
 
     // filter by topic if one is selected
     let toShow = datasetsData;
-    if (currentTopicId) {
-        const topic = topicsData.find(t => t.id === currentTopicId);
+    if (currentTopicId !== null) {
+        const topic = topicsData[currentTopicId];
         if (topic) toShow = datasetsData.filter(d => topic.datasetIds.includes(d.id));
     }
 
